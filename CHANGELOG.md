@@ -1,6 +1,29 @@
 # Change Log
 
 <a name="unreleased"></a>
+## [0.13.0](https://www.github.com/boson-project/func/compare/v0.12.1...v0.13.0) (2021-04-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* change envVars to env in func.yaml (#316)
+
+### Features
+
+* add support for annotations in func.yaml ([#314](https://www.github.com/boson-project/func/issues/314)) ([5feb0e2](https://www.github.com/boson-project/func/commit/5feb0e20f366f8dc46f339257d87419bc852753c))
+* function name matches KService name ([#317](https://www.github.com/boson-project/func/issues/317)) ([541e858](https://www.github.com/boson-project/func/commit/541e8586f7348fa92ee83f246ef34730b1801b9f))
+* usage of local evnvvar in func cfg file ([7f8e595](https://www.github.com/boson-project/func/commit/7f8e5954a939563486661a98198b22f41eebc195))
+
+
+### Bug Fixes
+
+* default for `--builder` flag ([06455f4](https://www.github.com/boson-project/func/commit/06455f4bac02e8581ae4471e72909ba9fe7dbd4d))
+
+
+### Code Refactoring
+
+* change envVars to env in func.yaml ([#316](https://www.github.com/boson-project/func/issues/316)) ([89ff286](https://www.github.com/boson-project/func/commit/89ff286a1f3afae655a2c724a05cb3bc3c281786))
+
 ### [0.12.1](https://www.github.com/boson-project/func/compare/v0.12.0...v0.12.1) (2021-04-14)
 
 
