@@ -1,6 +1,27 @@
 # Change Log
 
 <a name="unreleased"></a>
+## [0.15.0](https://www.github.com/jrangelramos/func/compare/v0.14.0...v0.15.0) (2021-05-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **templates:** modify the nodejs event template to accept a cloudevent (#356)
+
+### Features
+
+* add 'kn func emit' command ([#332](https://www.github.com/jrangelramos/func/issues/332)) ([49594d9](https://www.github.com/jrangelramos/func/commit/49594d976627c593ff18e42086199225ddcf5130))
+
+
+### Bug Fixes
+
+* minor typos in node template docs ([#351](https://www.github.com/jrangelramos/func/issues/351)) ([ea0a75a](https://www.github.com/jrangelramos/func/commit/ea0a75a7ccb6d00b8c859ff4cd311ad33fb8dbc3))
+
+
+### src
+
+* **templates:** modify the nodejs event template to accept a cloudevent ([#356](https://www.github.com/jrangelramos/func/issues/356)) ([caf0659](https://www.github.com/jrangelramos/func/commit/caf0659900a79650bb11877ffaeadbc30be9f922))
+
 ## [0.14.0](https://www.github.com/boson-project/func/compare/v0.13.0...v0.14.0) (2021-05-12)
 
 
