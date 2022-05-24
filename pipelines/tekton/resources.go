@@ -41,6 +41,11 @@ func generatePipeline(f fn.Function, labels map[string]string) *pplnv1beta1.Pipe
 			Default:     pplnv1beta1.NewArrayOrString(*f.Git.URL),
 		},
 		{
+			Name:        "gitSubdirectory",
+			Description: "Subdirectory inside output folder where source code will be cloned",
+			Default:     pplnv1beta1.NewArrayOrString("git"),
+		},
+		{
 			Name:        "gitRevision",
 			Description: "Git revision to build",
 		},
@@ -110,6 +115,10 @@ func generatePipelineRun(f fn.Function, labels map[string]string) *pplnv1beta1.P
 				{
 					Name:  "gitRepository",
 					Value: *pplnv1beta1.NewArrayOrString(*f.Git.URL),
+				},
+				{
+					Name:  "gitSubdirectory",
+					Value: *pplnv1beta1.NewArrayOrString("git"),
 				},
 				{
 					Name:  "gitRevision",

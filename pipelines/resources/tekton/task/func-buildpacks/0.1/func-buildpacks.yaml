@@ -82,17 +82,19 @@ spec:
         #!/usr/bin/env bash
         set -e
 
+        cp -rf $(workspaces.source.path)/git $(workspaces.source.path)/src
+
         if [[ "$(workspaces.cache.bound)" == "true" ]]; then
           echo "> Setting permissions on '$(workspaces.cache.path)'..."
           chown -R "$(params.USER_ID):$(params.GROUP_ID)" "$(workspaces.cache.path)"
         fi
 
-        for path in "/tekton/home" "/layers" "$(workspaces.source.path)"; do
+        for path in "/tekton/home" "/layers" "$(workspaces.source.path)/src"; do
           echo "> Setting permissions on '$path'..."
           chown -R "$(params.USER_ID):$(params.GROUP_ID)" "$path"
 
-          if [[ "$path" == "$(workspaces.source.path)" ]]; then
-              chmod 775 "$(workspaces.source.path)"
+          if [[ "$path" == "$(workspaces.source.path)/src" ]]; then
+              chmod 775 "$(workspaces.source.path)/src"
           fi
         done
 
@@ -136,7 +138,7 @@ spec:
         - name: DOCKER_CONFIG
           value: $(workspaces.dockerconfig.path)
       args:
-        - "-app=$(workspaces.source.path)/$(params.SOURCE_SUBPATH)"
+        - "-app=$(workspaces.source.path)/src/$(params.SOURCE_SUBPATH)"
         - "-cache-dir=$(workspaces.cache.path)"
         - "-cache-image=$(params.CACHE_IMAGE)"
         - "-uid=$(params.USER_ID)"
@@ -171,9 +173,9 @@ spec:
 
         digest=$(cat $(results.APP_IMAGE_DIGEST.path))
 
-        func_file="$(workspaces.source.path)/func.yaml"
+        func_file="$(workspaces.source.path)/git/func.yaml"
         if [ "$(params.SOURCE_SUBPATH)" != "" ]; then
-          func_file="$(workspaces.source.path)/$(params.SOURCE_SUBPATH)/func.yaml"
+          func_file="$(workspaces.source.path)/git/$(params.SOURCE_SUBPATH)/func.yaml"
         fi
 
         echo ""

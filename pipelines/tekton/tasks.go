@@ -23,6 +23,8 @@ func taskFetchSources() pplnv1beta1.PipelineTask {
 		Params: []pplnv1beta1.Param{
 			{Name: "url", Value: *pplnv1beta1.NewArrayOrString("$(params.gitRepository)")},
 			{Name: "revision", Value: *pplnv1beta1.NewArrayOrString("$(params.gitRevision)")},
+			{Name: "subdirectory", Value: *pplnv1beta1.NewArrayOrString("$(params.gitSubdirectory)")},
+
 		},
 	}
 }
@@ -67,7 +69,7 @@ func taskDeploy(runAfter string) pplnv1beta1.PipelineTask {
 			Workspace: "source-workspace",
 		}},
 		Params: []pplnv1beta1.Param{
-			{Name: "path", Value: *pplnv1beta1.NewArrayOrString("$(workspaces.source.path)/$(params.contextDir)")},
+			{Name: "path", Value: *pplnv1beta1.NewArrayOrString("$(workspaces.source.path)/git/$(params.contextDir)")},
 		},
 	}
 }
