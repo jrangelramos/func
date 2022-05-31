@@ -15,6 +15,7 @@ func taskFetchSources() pplnv1beta1.PipelineTask {
 		Name: taskNameFetchSources,
 		TaskRef: &pplnv1beta1.TaskRef{
 			Name: "git-clone",
+			Kind: "ClusterTask",
 		},
 		Workspaces: []pplnv1beta1.WorkspacePipelineTaskBinding{{
 			Name:      "output",
