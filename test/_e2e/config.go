@@ -13,7 +13,7 @@ const (
 
 // GetRegistry returns registry
 func GetRegistry() string {
-	return getOsEnvOrDefault("E2E_REGISTRY_URL", defaultRegistry)
+	return getOsEnvOrDefault("E2E_REGISTRY_URL", "")
 }
 
 // GetFuncBinaryPath should return the Path of 'func' binary under test

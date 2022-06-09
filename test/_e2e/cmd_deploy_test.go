@@ -11,11 +11,14 @@ import (
 func Deploy(t *testing.T, knFunc *TestShellCmdRunner, project *FunctionTestProject) {
 
 	var result TestShellCmdResult
-	if project.IsBuilt {
-		result = knFunc.Exec("deploy", "--path", project.ProjectPath, "--registry", GetRegistry(), "--build=disabled")
-	} else {
-		result = knFunc.Exec("deploy", "--path", project.ProjectPath, "--registry", GetRegistry())
+	args := []string {"deploy", "--path", project.ProjectPath}
+	if GetRegistry() != "" {
+		args = append(args, "--registry", GetRegistry())
 	}
+	if project.IsBuilt {
+		args = append(args, "--build=disabled")
+	}
+	result = knFunc.Exec(args...)
 	if result.Error != nil {
 		t.Fail()
 	}

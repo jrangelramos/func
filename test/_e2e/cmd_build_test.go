@@ -15,7 +15,12 @@ import (
 // Build runs `func build' command for a given test project.
 func Build(t *testing.T, knFunc *TestShellCmdRunner, project *FunctionTestProject) {
 
-	result := knFunc.Exec("build", "--path", project.ProjectPath, "--registry", GetRegistry())
+	var result TestShellCmdResult
+	if GetRegistry() == "" { // use default registry
+		result = knFunc.Exec("build", "--path", project.ProjectPath)
+	} else {
+		result = knFunc.Exec("build", "--path", project.ProjectPath, "--registry", GetRegistry())
+	}
 	if result.Error != nil {
 		t.Fail()
 	}
@@ -43,7 +48,12 @@ func TestBuild_S2I(t *testing.T) {
 	defer cleanup()
 
 	run(t, bin, prefix, "create", "-v", "--language=node", cwd)
-	output := run(t, bin, prefix, "build", "-v", "--builder=s2i", "--registry", GetRegistry())
+	
+	args := []string{"build", "-v", "--builder=s2i"}
+	if GetRegistry() != "" {
+		args = append(args, "--registry", GetRegistry())
+	}
+	output := run(t, bin, prefix, args...)
 	if !strings.Contains(output, "Function image built:") {
 		t.Fatal("image not built")
 	}
