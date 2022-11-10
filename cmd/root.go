@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"knative.dev/kn-plugin-func/k8s"
+	"knative.dev/kn-plugin-func/s2i"
 	"os"
 	"path/filepath"
 	"strings"
@@ -360,7 +362,13 @@ func (v Version) StringVerbose() string {
 	if date == "" {
 		date = time.Now().Format(time.RFC3339)
 	}
-	return fmt.Sprintf("%s-%s-%s", vers, hash, date)
+	funcVersion := fmt.Sprintf("%s-%s-%s", vers, hash, date)
+
+	return fmt.Sprintf("Version: %s\n" +
+		"SocatImage: %s\n" +
+		"QuarkusBuilderImage: %s", funcVersion,
+		k8s.SocatImage,
+		s2i.QuarkusBuilderImage)
 }
 
 // surveySelectDefault returns 'value' if defined and exists in 'options'.
