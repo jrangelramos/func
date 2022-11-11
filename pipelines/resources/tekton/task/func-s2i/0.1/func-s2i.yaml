@@ -40,6 +40,9 @@ spec:
     - name: S2I_IMAGE_SCRIPTS_URL
       description: The URL containing the default assemble and run scripts for the builder image.
       default: "image:///usr/libexec/s2i"
+    - name: MIRROR_CONFIG_SECRET_NAME
+      description: Secret name that contains the registry.conf and policy.json with mirror registries
+      default: mirror-config
   workspaces:
     - name: source
     - name: sslcertdir
@@ -86,8 +89,23 @@ spec:
       image: registry.redhat.io/rhel8/buildah@sha256:a1e5cc0fb334e333e5eab69689223e8bd1f0c060810d260603b26cf8c0da2023
       workingDir: /gen-source
       script: |
+        # =====================================================================================
+        # For Disconnected builds (using mirror) the below step is required
+        # - User/Developer creates a secret "mirror-config" with container mirror registry config files
+        # - Expected files are: registries.conf, policy.json and auth.json (or config.json).
+        # - Secret is mounted as volume and the task place the files in the right location expected by Buildah
+        # =====================================================================================
+        mkdir -p $HOME/.config/containers
+        [[ -f /mirror-config/registries.conf ]] && cp /mirror-config/registries.conf $HOME/.config/containers/registries.conf
+        [[ -f /mirror-config/policy.json ]] && cp /mirror-config/policy.json $HOME/.config/containers/policy.json
+        [[ -f /mirror-config/config.json ]] && cp /mirror-config/config.json $HOME/.config/containers/auth.json
+        [[ -f /mirror-config/auth.json ]] && cp /mirror-config/auth.json $HOME/.config/containers/auth.json
+
+        # Using tls verify flag only when mirror is not set
+        [[ ! -f /mirror-config/registries.conf ]] && TLSVERIFY_FLAG="--tls-verify=$(params.TLSVERIFY)"
+
         [[ "$(workspaces.sslcertdir.bound)" == "true" ]] && CERT_DIR_FLAG="--cert-dir $(workspaces.sslcertdir.path)"
-        buildah ${CERT_DIR_FLAG} bud --storage-driver=vfs --tls-verify=$(params.TLSVERIFY) --layers \
+        buildah ${CERT_DIR_FLAG} bud --storage-driver=vfs ${TLSVERIFY_FLAG} --layers \
           -f /gen-source/Dockerfile.gen -t $(params.IMAGE) .
 
         [[ "$(workspaces.dockerconfig.bound)" == "true" ]] && export DOCKER_CONFIG="$(workspaces.dockerconfig.path)"
@@ -100,6 +118,8 @@ spec:
         mountPath: /var/lib/containers
       - mountPath: /gen-source
         name: gen-source
+      - mountPath: /mirror-config
+        name: mirror-config
       securityContext:
         capabilities:
           add: ["SETFCAP"]
@@ -110,3 +130,7 @@ spec:
       name: gen-source
     - emptyDir: {}
       name: env-vars
+    - name: mirror-config
+      secret:
+        secretName: $(params.MIRROR_CONFIG_SECRET_NAME)
+        optional: true
