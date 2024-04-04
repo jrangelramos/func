@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Setup Openshift Serverless and Pipelines
+# Setup Openshift Serverless and Openshift Pipelines
 #
 
 set -o errexit

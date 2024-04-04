@@ -37,16 +37,14 @@ pushd "$(dirname "$0")/.."
 export E2E_REGISTRY_URL="${E2E_REGISTRY_URL:-default}"
 export E2E_FUNC_BIN_PATH="${E2E_FUNC_BIN_PATH:-$(pwd)/func}"
 export E2E_USE_KN_FUNC="false"
+export E2E_GIT_SERVER_PODNAME="gitserver"
+export E2E_GIT_SERVER_ROUTE_URL="http://$(oc get route gitserver -o jsonpath='{.spec.host}')"
 
 # Ensure 'func' binary is built
 if [[ ! -f "$E2E_FUNC_BIN_PATH" ]]; then
   echo "building func binary"
   make build
 fi
-
-# Deploy GitServer
-oc adm policy add-scc-to-user anyuid -z default
-./test/gitserver.sh
 
 # Execute on cluster tests
 go test -v -test.v -test.timeout=90m -tags="oncluster" ./test/oncluster/
