@@ -14,6 +14,8 @@ source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
 
 header "Installing Test GitServer"
 
+echo "Current project namespace"
+oc project
 cat << EOF | oc apply -f -
 apiVersion: v1
 kind: Pod
@@ -28,6 +30,7 @@ spec:
     ports:
       - containerPort: 8080
 EOF
+echo "POD CREATED"
 oc wait pod/gitserver --for=condition=Ready --timeout=15s
 
 
