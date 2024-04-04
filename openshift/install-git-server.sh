@@ -7,7 +7,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-GITSERVER_IMAGE="${GITSERVER_IMAGE:-}"
+GITSERVER_IMAGE="${GITSERVER_IMAGE:-ghcr.io/jrangelramos/gitserver-unpriv:latest}"
 
 go env
 source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
