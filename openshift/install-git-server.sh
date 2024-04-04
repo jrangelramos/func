@@ -7,8 +7,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-IMAGE_GITSERVER="${IMAGE_GITSERVER:-image-registry.openshift-image-registry.svc:5000/gittest/gitserver}"
-IMAGE_GITSERVER="${IMAGE_GITSERVER:-}"
+GITSERVER_IMAGE="${GITSERVER_IMAGE:-}"
 
 go env
 source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
@@ -24,7 +23,7 @@ metadata:
   name: gitserver
 spec:
   containers:
-  - image: ${IMAGE_GITSERVER}
+  - image: ${GITSERVER_IMAGE}
     name: user-container
     ports:
       - containerPort: 8080
