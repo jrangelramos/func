@@ -48,7 +48,8 @@ if [[ ! -f "$E2E_FUNC_BIN_PATH" ]]; then
   env FUNC_REPO_REF=${FUNC_REPO_REF} FUNC_REPO_BRANCH_REF=${FUNC_REPO_BRANCH_REF} make build
 fi
 
-# Execute on cluster tests
+# Execute on cluster tests (s2i only)
+export FUNC_BUILDER="s2i"
 go test -v -test.v -test.timeout=90m -tags="oncluster" ./test/oncluster/
 ret=$?
 
