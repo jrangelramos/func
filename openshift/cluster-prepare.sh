@@ -17,7 +17,7 @@ INSTALL_GITSERVER="${INSTALL_GITSERVER:-true}"
 GITSERVER_IMAGE="${GITSERVER_IMAGE:-ghcr.io/jrangelramos/gitserver-unpriv:latest}"
 
 go env
-source "$(go run knative.dev/hackcmd/script e2e-tests.sh)"
+source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
 
 # Prepare Namespace
 TEST_NAMESPACE="${TEST_NAMESPACE:-knfunc-oncluster-test-$(head -c 128 </dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1)}"
