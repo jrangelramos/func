@@ -15,8 +15,8 @@ source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
 BASEDIR=$(dirname "$0")
 
 header "Installing Test GitServer"
-sed "s!_GITSERVER_IMAGE_!${GITSERVER_IMAGE}!g" "${BASEDIR}/openshift/deploy/gitserver-service.yaml" > "${BASEDIR}/openshift/deploy/gitserver.yaml"
-oc apply -f opensgift/deploy/gitserver.yaml
+sed "s!_GITSERVER_IMAGE_!${GITSERVER_IMAGE}!g" "${BASEDIR}/deploy/gitserver-service.yaml" > "${BASEDIR}/deploy/gitserver.yaml"
+oc apply -f "${BASEDIR}/deploy/gitserver.yaml"
 oc wait pod/gitserver --for=condition=Ready --timeout=15s
 
 subheader "Exposing Test GitServer route"
