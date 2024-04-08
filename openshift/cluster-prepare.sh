@@ -34,8 +34,8 @@ if [ "$INSTALL_SERVERLESS" == "true" ] ; then
   subheader "Installing Serving and Eventing"
   kubectl apply -f ${BASEDIR}/deploy/knative-serving.yaml
   kubectl apply -f ${BASEDIR}/deploy/knative-eventing.yaml
-  kubectl wait --for=condition=Ready --timeout=5m knativeserving knative-serving -n knative-serving
-  kubectl wait --for=condition=Ready --timeout=5m knativeeventing knative-eventing -n knative-eventing
+  kubectl wait --for=condition=Ready --timeout=10m knativeserving knative-serving -n knative-serving
+  kubectl wait --for=condition=Ready --timeout=10m knativeeventing knative-eventing -n knative-eventing
 fi
 
 
