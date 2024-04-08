@@ -48,6 +48,11 @@ if [[ ! -f "$E2E_FUNC_BIN_PATH" ]]; then
   env FUNC_REPO_REF=${FUNC_REPO_REF} FUNC_REPO_BRANCH_REF=${FUNC_REPO_BRANCH_REF} make build
 fi
 
+# For now, let's skips tests that depends on Podman/Docker on Openshift CI
+if [[ "${OPENSHIFT_CI}" == "true" ]] ; then
+  mv ./test/oncluster/scenario_from-cli-local_test.go ./test/oncluster/scenario_from-cli-local_test.skip
+fi
+
 # Execute on cluster tests (s2i only)
 export FUNC_BUILDER="s2i"
 export FUNC_INSECURE="true"
