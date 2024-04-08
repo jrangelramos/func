@@ -93,7 +93,7 @@ func TestBasicGit(t *testing.T) {
 		defer knFunc.Exec("delete", "-p", funcPath)
 
 		// Assert "first revision" is returned
-		result := knFunc.Exec("invoke", "-p", funcPath)
+		result := knFunc.Exec("invoke", "-p", funcPath, "-i")
 		assert.Assert(t, strings.Contains(result.Out, "first revision"), "Func body does not contain 'first revision'")
 
 		previousServiceRevision := common.GetCurrentServiceRevision(t, funcName)

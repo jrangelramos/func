@@ -41,7 +41,6 @@ export E2E_GIT_SERVER_PODNAME="gitserver"
 export E2E_GIT_SERVER_ROUTE_URL="http://$(oc get route gitserver -o jsonpath='{.spec.host}')"
 FUNC_REPO_REF="${FUNC_REPO_REF:-openshift-knative/kn-plugin-func}"
 FUNC_REPO_BRANCH_REF="${FUNC_REPO_BRANCH_REF:-release-next}"
-FUNC_INSECURE="true"
 
 # Ensure 'func' binary is built
 if [[ ! -f "$E2E_FUNC_BIN_PATH" ]]; then
@@ -51,6 +50,7 @@ fi
 
 # Execute on cluster tests (s2i only)
 export FUNC_BUILDER="s2i"
+export FUNC_INSECURE="true"
 go test -v -test.v -test.timeout=90m -tags="oncluster" ./test/oncluster/
 ret=$?
 
