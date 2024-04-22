@@ -56,7 +56,7 @@ fi
 # Execute on cluster tests (s2i only)
 export FUNC_BUILDER="s2i"
 export FUNC_INSECURE="true"
-go test -v -test.v -test.timeout=90m -tags="oncluster" ./test/oncluster/
+go test -v -timeout=90m -tags="oncluster" ./test/oncluster/
 ret=$?
 
 popd
