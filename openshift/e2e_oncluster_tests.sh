@@ -32,7 +32,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
+#source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
 
 pushd "$(dirname "$0")/.."
 
