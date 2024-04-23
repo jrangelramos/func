@@ -32,6 +32,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
+
 pushd "$(dirname "$0")/.."
 
 export E2E_REGISTRY_URL="${E2E_REGISTRY_URL:-ttl.sh/knfuncci$(head -c 128 </dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1)}"
@@ -56,7 +58,7 @@ fi
 # Execute on cluster tests (s2i only)
 export FUNC_BUILDER="s2i"
 export FUNC_INSECURE="true"
-go test -v -timeout=90m -tags="oncluster" ./test/oncluster/
+go_test_e2e -v -timeout 90m -tags="oncluster" ./test/oncluster/
 ret=$?
 
 popd
