@@ -36,7 +36,8 @@ set -o pipefail
 
 pushd "$(dirname "$0")/.."
 
-export E2E_REGISTRY_URL="${E2E_REGISTRY_URL:-ttl.sh/knfuncci$(head -c 128 </dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1)}"
+#export E2E_REGISTRY_URL="${E2E_REGISTRY_URL:-ttl.sh/knfuncci$(head -c 128 </dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1)}"
+export E2E_REGISTRY_URL="default"
 export E2E_FUNC_BIN_PATH="${E2E_FUNC_BIN_PATH:-$(pwd)/func}"
 export E2E_USE_KN_FUNC="false"
 export E2E_GIT_SERVER_PODNAME="gitserver"
