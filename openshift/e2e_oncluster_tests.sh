@@ -32,12 +32,17 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-#source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
+source "$(go run knative.dev/hack/cmd/script e2e-tests.sh)"
 
 pushd "$(dirname "$0")/.."
 
-#export E2E_REGISTRY_URL="${E2E_REGISTRY_URL:-ttl.sh/knfuncci$(head -c 128 </dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1)}"
-export E2E_REGISTRY_URL="default"
+export BUILD_NUMBER=${BUILD_NUMBER:-$(head -c 128 < /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 8)}
+export ARTIFACT_DIR="${ARTIFACT_DIR:-$(dirname "$(mktemp -d -u)")/build-${BUILD_NUMBER}}"
+export ARTIFACTS="${ARTIFACTS:-${ARTIFACT_DIR}}/kn-event/e2e-tests"
+mkdir -p "${ARTIFACTS}"
+
+export E2E_REGISTRY_URL="${E2E_REGISTRY_URL:-ttl.sh/knfuncci$(head -c 128 </dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 6)}"
+#export E2E_REGISTRY_URL="default"
 export E2E_FUNC_BIN_PATH="${E2E_FUNC_BIN_PATH:-$(pwd)/func}"
 export E2E_USE_KN_FUNC="false"
 export E2E_GIT_SERVER_PODNAME="gitserver"
@@ -47,7 +52,7 @@ FUNC_REPO_BRANCH_REF="${FUNC_REPO_BRANCH_REF:-release-next}"
 
 # Ensure 'func' binary is built
 if [[ ! -f "$E2E_FUNC_BIN_PATH" ]]; then
-  echo "building func binary"
+  echo "=== building func binary"
   env FUNC_REPO_REF=${FUNC_REPO_REF} FUNC_REPO_BRANCH_REF=${FUNC_REPO_BRANCH_REF} make build
 fi
 
@@ -57,9 +62,10 @@ if [[ "${OPENSHIFT_CI}" == "true" ]] ; then
 fi
 
 # Execute on cluster tests (s2i only)
+echo "=== running e2e oncluster test"
 export FUNC_BUILDER="s2i"
 export FUNC_INSECURE="true"
-go test -v -timeout 90m -tags="oncluster" ./test/oncluster/
+go_test_e2e -v -timeout 90m -tags="oncluster" ./test/oncluster/ || fail_test 'kn-func e2e tests'
 ret=$?
 
 popd
