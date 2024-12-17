@@ -5,7 +5,9 @@ package e2e
 import (
 	"context"
 	"fmt"
+	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -102,10 +104,13 @@ func TestConfigEnvs(t *testing.T) {
 	funcName := "test-config-envs"
 	funcPath := filepath.Join(t.TempDir(), funcName)
 
+	_, thisfile, _, _ := runtime.Caller(0)
+	testTemplateFolder := path.Join(path.Dir(thisfile), "..", "templates")
+
 	knFunc.TestCmd.Exec("create",
 		"--language", "go",
-		"--template", "envs",
-		"--repository", "http://github.com/boson-project/test-templates.git", // TODO Make on config
+		"--template", "testenvs",
+		"--repository", "file://"+testTemplateFolder,
 		funcPath)
 	knFunc.TestCmd.SourceDir = funcPath
 
@@ -165,7 +170,7 @@ func TestConfigEnvs(t *testing.T) {
 
 	// Deploy
 	knFunc.TestCmd.WithEnv(testEnvName, testEnvValue)
-	knFunc.TestCmd.Exec("deploy", "--builder", "pack", "--registry", common.GetRegistry())
+	knFunc.TestCmd.Exec("deploy", "--registry", common.GetRegistry())
 	defer knFunc.TestCmd.Exec("delete")
 	_, functionUrl := common.WaitForFunctionReady(t, funcName)
 
