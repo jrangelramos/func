@@ -19,7 +19,7 @@ jobs:
       - name: Install Nightly Podman Next
         env:
           FEDORA_RELEASE: 40
-          BASE_ARCH: x86_84
+          BASE_ARCH: x86_64
         run: |
           sudo apt update 
           sudo mkdir -p /etc/yum.repos.d
