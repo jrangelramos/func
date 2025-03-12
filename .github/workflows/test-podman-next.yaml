@@ -16,6 +16,29 @@ jobs:
           echo "PATH=${{ github.workspace }}/hack/bin:$PATH" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
       - uses: knative/actions/setup-go@main
+      - name: Install Binaries
+        run: ./hack/install-binaries.sh
+      - name: Allocate Cluster
+        run: |
+          attempt=0
+          max_attempts=5
+          until [ $attempt -ge $max_attempts ]
+          do
+            attempt=$((attempt+1))
+            echo "------------------ Attempt $attempt ------------------"
+            ./hack/allocate.sh && break
+            echo "------------------ failed, retrying... ------------------"
+            if [ $attempt -ge $max_attempts ]; then
+              echo "------------------ max # of retries reached, exiting ------------------"
+              exit 1
+            fi
+            ./hack/delete.sh
+            echo "------------------ sleep for 5 minutes ------------------"
+            sleep 300
+          done
+          echo "------------------ finished! attempt $attempt ------------------"
+      - name: Local Registry
+        run: ./hack/registry.sh
       - name: Install Nightly Podman Next
         env:
           FEDORA_RELEASE: 40
@@ -71,29 +94,6 @@ jobs:
             uidmap
           sudo sysctl kernel.unprivileged_userns_clone=1
           podman info
-      - name: Install Binaries
-        run: ./hack/install-binaries.sh
-      - name: Allocate Cluster
-        run: |
-          attempt=0
-          max_attempts=5
-          until [ $attempt -ge $max_attempts ]
-          do
-            attempt=$((attempt+1))
-            echo "------------------ Attempt $attempt ------------------"
-            ./hack/allocate.sh && break
-            echo "------------------ failed, retrying... ------------------"
-            if [ $attempt -ge $max_attempts ]; then
-              echo "------------------ max # of retries reached, exiting ------------------"
-              exit 1
-            fi
-            ./hack/delete.sh
-            echo "------------------ sleep for 5 minutes ------------------"
-            sleep 300
-          done
-          echo "------------------ finished! attempt $attempt ------------------"
-      - name: Local Registry
-        run: ./hack/registry.sh
       - name: Setup testing images
         run: ./hack/setup-testing-images.sh
       - name: Integration Test Podman
