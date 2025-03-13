@@ -71,6 +71,8 @@ jobs:
         run: ./hack/registry.sh
       - name: Setup testing images
         run: ./hack/setup-testing-images.sh
+      - name: Setup tmate session - DEBUG
+        uses: mxschmitt/action-tmate@v3
       - name: Integration Test Podman
         env:
           FUNC_REPO_REF: ${{ github.event.pull_request.head.repo.full_name }}
