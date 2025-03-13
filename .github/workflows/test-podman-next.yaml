@@ -35,10 +35,10 @@ jobs:
           EOF
           sudo chmod 644 /etc/yum.repos.d/fedora.repo
           sudo dnf copr enable rhcontainerbot/podman-next fedora-$FEDORA_RELEASE-$BASE_ARCH --releasever=$FEDORA_RELEASE -y
-          sudo dnf download conmon podman --releasever=$FEDORA_RELEASE -y
+          sudo dnf download crun conmon podman --releasever=$FEDORA_RELEASE -y
           sudo alien --to-deb $(ls -1 conmon*.rpm) --install
+          sudo alien --to-deb $(ls -1 crun*.rpm) --install
           sudo alien --to-deb $(ls -1 podman*.rpm) --install
-          sudo apt-get install -y netavark
           podman info
       - name: Set Environment Variables
         run: |
@@ -71,8 +71,6 @@ jobs:
         run: ./hack/registry.sh
       - name: Setup testing images
         run: ./hack/setup-testing-images.sh
-      - name: Setup tmate session - DEBUG
-        uses: mxschmitt/action-tmate@v3
       - name: Integration Test Podman
         env:
           FUNC_REPO_REF: ${{ github.event.pull_request.head.repo.full_name }}
