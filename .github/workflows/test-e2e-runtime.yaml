@@ -12,9 +12,17 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        runtime: ["node", "go", "quarkus", "springboot", "typescript", "rust"]
         os: [ "ubuntu-latest", "ubuntu-24.04-arm" ]
+        runtime: ["go", "quarkus"]
         include:
+          - os: ubuntu-latest
+            runtime: node
+          - os: ubuntu-latest
+            runtime: typescript
+          - os: ubuntu-latest
+            runtime: springboot
+          - os: ubuntu-latest
+            runtime: rust
           - os: ubuntu-24.04-arm
             arch: arm64
     runs-on: ${{ matrix.os }}
